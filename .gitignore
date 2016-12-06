@@ -45,3 +45,13 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+Client/Client/bin/Release/Client.exe
+*.exe
+Client/Client/bin/Debug/Client.exe.config
+Client/Client/bin/Debug/Client.vshost.exe.config
+Client/Client/bin/Release/Client.vshost.exe.manifest
+Client/Client/bin/Debug/Client.pdb
+Client/Client/bin/Release/Client.exe.config
+Client/Client/bin/Release/Client.vshost.exe.config
+Client/Client/bin/Release/Client.pdb
+Client/Client/bin/Debug/Client.vshost.exe.manifest
