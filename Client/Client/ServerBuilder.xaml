@@ -1,0 +1,21 @@
+﻿<Window x:Class="Client.ServerBuilder"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ServerBuilder" Height="200" Width="300"
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+    
+    <Grid>
+        <Label Name="lblTitle" Content="Server Builder" Margin="10,10,10,0" Height="26" HorizontalContentAlignment="Center" VerticalAlignment="Top"/>
+
+        <Label Content="Client IP" Margin="10,52,0,0" Height="23" HorizontalContentAlignment="Left" VerticalAlignment="Top" HorizontalAlignment="Left" Width="64"/>
+        <TextBox Name="txtHost" HorizontalAlignment="Left" Height="23" Margin="128,52,0,0" TextWrapping="Wrap" Text="127.0.0.1" VerticalAlignment="Top" Width="154"/>
+
+        <Label Content="Port" Margin="10,88,0,0" Height="23" HorizontalContentAlignment="Left" VerticalAlignment="Top" HorizontalAlignment="Left" Width="64"/>
+        <TextBox Name="txtPort" HorizontalAlignment="Left" Height="23" Margin="128,88,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="61" PreviewTextInput="NumberValidationTextBox"/>
+
+
+        <Button Name="btnBuild" Content="Build" Margin="0,0,10,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Click="btnBuild_Click"/>
+        <Button Name="btnClose" Content="Close" HorizontalAlignment="Left" Margin="10,0,0,10" Width="75" Height="20" VerticalAlignment="Bottom" Click="btnClose_Click"/>
+
+    </Grid>
+</Window>

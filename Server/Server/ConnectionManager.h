@@ -15,6 +15,8 @@ using jsoncons::json;
 class ConnectionManager
 {
 	public:
+		ConnectionManager();
+		ConnectionManager(char* Host ,int Port );
 		void SetupSocket(HWND hWnd);
 		void CloseSocketConnection();
 		void CloseSocket();
@@ -24,6 +26,7 @@ class ConnectionManager
 
 		string GetRecvData();		
 		static DWORD Thread_Start_TryConnect(LPVOID* param);
+
 
 	private:
 		void TryConnect();

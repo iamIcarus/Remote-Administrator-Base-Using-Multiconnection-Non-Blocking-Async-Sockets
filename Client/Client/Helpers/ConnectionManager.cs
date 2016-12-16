@@ -15,7 +15,7 @@ namespace Client.Helpers
 {
     public class ConnectionManager
     {
-        public EventHandler<ConnectionEventArgs> OnBotChange;
+        public EventHandler<ConnectionEventArgs> OnServerChange;
         public EventHandler<Responce> OnResponceReceived;
 
         private const int PORT = 100;
@@ -88,13 +88,13 @@ namespace Client.Helpers
               // Generate new Id
               Guid Id = Guid.NewGuid();
 
-              //Add bot to sockets
+              //Add server to sockets
               connectedSockets.Add(Id,socket);
               socket.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, socket);
               clientSocket.BeginAccept(AcceptCallback, null);
 
               //Notify Client
-              TriggerOnBotChange(Id, 0);
+              TriggerOnServerChange(Id, 0);
 
               Task.Factory.StartNew(() => { RequestInfo(socket); });
           }
@@ -147,7 +147,7 @@ namespace Client.Helpers
           {
               Guid Id = connectedSockets.SingleOrDefault(x => x.Value == sock).Key;
 
-              TriggerOnBotChange(Id, 1); // Notify UI to remove from list
+              TriggerOnServerChange(Id, 1); // Notify UI to remove from list
               sock.Close();
               connectedSockets.Remove(Id);
           }
@@ -243,11 +243,11 @@ namespace Client.Helpers
           }
 
         #region Broadcast
-        public void BroadcastAttack(int attack,string host,string port,string timeout)
+        public void BroadcastCommand()
         {
             Task.Factory.StartNew(() =>
             {
-                String Data = string.Format("Start|{0}|{1}|{2}|{3}", attack, host, port, timeout);
+                String Data = string.Format("Start|{0}|{1}|{2}|{3}", "d1", "d2", "d3", "d4");
 
                 foreach (var entry in connectedSockets)
                 {
@@ -258,28 +258,6 @@ namespace Client.Helpers
                     byte[] msg = Encoding.ASCII.GetBytes(json);
 
                     SendData(msg,socket);        
-                }
-
-
-            });
-
-        }
-
-        public void BroadcastStopAttack(int attack)
-        {
-            Task.Factory.StartNew(() =>
-            {
-                String Data = string.Format("Stop|{0}", attack);
-
-                foreach (var entry in connectedSockets)
-                {
-                    var socket = entry.Value;
-
-                    JavaScriptSerializer js = new JavaScriptSerializer();
-                    string json = js.Serialize(new Message() { Code = "Command", Data = Data });
-                    byte[] msg = Encoding.ASCII.GetBytes(json);
-
-                    SendData(msg, socket);
                 }
 
 
@@ -324,11 +302,11 @@ namespace Client.Helpers
 
 
         #region Event Notifications
-        private void TriggerOnBotChange(Guid Id, int Type)
+        private void TriggerOnServerChange(Guid Id, int Type)
           {
               EventHandler<ConnectionEventArgs> tmp = null;
 
-              tmp = OnBotChange;
+              tmp = OnServerChange;
               if (tmp != null)
                   tmp(this, new ConnectionEventArgs() { ConnectionType = Type, Id = Id });
           }

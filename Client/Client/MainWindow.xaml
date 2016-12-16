@@ -9,23 +9,21 @@
     <Grid>
         <DockPanel>
             <Menu DockPanel.Dock="Top">
-                <MenuItem Header="_Command">
+                <MenuItem Header="_Commands">
                     <MenuItem Header="_Broadcast" >
-                        <MenuItem Header="_DDoS" >
-                            <MenuItem Header="_SYN Flood" Click="SynFloodItem_Click" />
-                            <MenuItem Header="_ICMP Flood" />
-                        </MenuItem>
                         <MenuItem Header="_General" >
                             <MenuItem Header="_Close Connections" />
                         </MenuItem>
                 </MenuItem>
-                        <Separator />
-                    <MenuItem Header="_Exit" />
+                    <MenuItem Header="_Server Builder" Click="ServerBuilderItem_Click" />
+
+                    <Separator />
+                    <MenuItem Header="_Exit"  Click="ExitItem_Click"/>
                 </MenuItem>
             </Menu>
         </DockPanel>
 
-        <ListView Name="lvBots" Margin="10,25,10,10">
+        <ListView Name="lvServers" Margin="10,25,10,10">
         <ListView.View>
             <GridView>
                 <GridViewColumn Header="#" Width="Auto" DisplayMemberBinding="{Binding No}" />

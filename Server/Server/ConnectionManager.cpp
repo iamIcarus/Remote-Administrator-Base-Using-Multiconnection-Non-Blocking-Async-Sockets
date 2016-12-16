@@ -1,12 +1,26 @@
 #include "ConnectionManager.h"
 using namespace std;
 
-char *szServer = "213.207.159.45";
+char *szServer = "127.0.0.1";
 int nPort = 100;
 char szHistory[10000];
 
 SOCKET Socket = NULL;
 SOCKADDR_IN SockAddr;
+
+
+ConnectionManager::ConnectionManager()
+{}
+
+ConnectionManager::ConnectionManager(char* Host, int Port)
+{
+
+	if (Host == NULL || Port == -1)
+		return;
+
+	szServer = Host;
+	nPort = Port;
+}
 
 void ConnectionManager::SetupSocket(HWND hWnd)
 {
@@ -91,7 +105,7 @@ void ConnectionManager::TryConnect()
 	{
 		connect(Socket, (LPSOCKADDR)(&SockAddr), sizeof(SockAddr));
 		Sleep(1000);
-
+		
 		char* out = new char[0];
 		ZeroMemory(out, sizeof(out));
 		int ret = send(Socket, out, sizeof(out) / sizeof(out[0]), 0);

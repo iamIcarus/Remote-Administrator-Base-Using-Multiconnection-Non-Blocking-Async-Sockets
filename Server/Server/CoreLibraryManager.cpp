@@ -5,15 +5,14 @@
 #include <vector>
 
 
-typedef void(__cdecl* SYN_Attack_Stop)();
-typedef void(__cdecl* SYN_Attack_Start)(LPWSTR, INT32, INT32);
-//typedef LPWSTR(__cdecl* TEST)(LPWSTR, INT32, INT32);
+typedef void(__cdecl* STOP_FUNCTION)();
+typedef void(__cdecl* START_FUNCTION)(LPWSTR, INT32, INT32);
 
 Command ParseCommand(string CommandString);
 vector<string> explode(const string& str, const char& ch);
 
-SYN_Attack_Start mSYN_Attack_Start = NULL;
-SYN_Attack_Stop mSYN_Attack_Stop = NULL;
+START_FUNCTION mStart = NULL;
+STOP_FUNCTION mStop = NULL;
 
 HINSTANCE dllHandle = NULL;
 
@@ -30,7 +29,7 @@ bool CoreLibraryManager::IsCoreDllLoaded()
 {
 	if (NULL != dllHandle)
 	{
-		if (mSYN_Attack_Start != NULL && mSYN_Attack_Stop != NULL)
+		if (mStart != NULL && mStop != NULL)
 			return true;
 	}	
 	
@@ -48,8 +47,8 @@ void CoreLibraryManager::LoadCoreLibrary()
 	if (NULL != dllHandle)
 	{
 		//Get pointer to our methods using GetProcAddress:
-		mSYN_Attack_Start = (SYN_Attack_Start)GetProcAddress(dllHandle, "SYN_Attack_Start");
-		mSYN_Attack_Stop = (SYN_Attack_Stop)GetProcAddress(dllHandle, "SYN_Attack_Stop");
+		mStart = (START_FUNCTION)GetProcAddress(dllHandle, "Start");
+		mStop = (STOP_FUNCTION)GetProcAddress(dllHandle, "Stop");
 	}
 }
 
@@ -61,23 +60,11 @@ void CoreLibraryManager::ExecuteCommand(string command)
 
 	if (cmd.Name.compare("Start") == 0)
 	{
-		int Port = atoi(cmd.Port.c_str());
-		int timeout = atoi(cmd.Timeout.c_str());
-
-		wchar_t wtext[20];
-		mbstowcs(wtext, cmd.Host.c_str(), strlen(cmd.Host.c_str()) + 1);//Plus null
-		LPWSTR Host = wtext;
-
-		if (cmd.AttackIndex.compare("1") == 0)
-		{		
-			mSYN_Attack_Stop();
-			mSYN_Attack_Start(Host, Port, timeout);
-		}
+		
 	}
-	else if (cmd.Name.compare("Start"))
+	else if (cmd.Name.compare("Stop"))
 	{
-		if (cmd.AttackIndex.compare("1") == 0)
-			mSYN_Attack_Stop();
+		
 	}
 }
 
@@ -97,11 +84,7 @@ Command ParseCommand(string CommandString)
 	{
 		switch (count)
 		{
-			case 0:	cmd.Name = item;	break;
-			case 1:	cmd.AttackIndex = item;	break;
-			case 2:	cmd.Host = item;	break;
-			case 3:	cmd.Port = item;	break;
-			case 4:	cmd.Timeout = item;	break;
+
 
 		}
 		count++;
